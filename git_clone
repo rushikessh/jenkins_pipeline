@@ -1,0 +1,16 @@
+pipeline{
+    agent{
+        node{
+            label "slave"
+            customWorkspace "/root/github"
+        }
+    }
+    
+    stages{
+        stage('git clone'){
+            steps{
+                sh "git clone https://github.com/rushikessh/onetimer.git"
+            }
+        }
+    }
+}
