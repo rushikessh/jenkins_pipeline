@@ -1,0 +1,35 @@
+pipeline{
+    agent{
+        node{
+            label "slave"
+        }
+    }
+    stages{
+        stage('download httpd server'){
+        steps{
+            sh "yum install httpd -y"
+        }
+    }
+        stage('enable httpd server'){
+        steps{
+            sh "systemctl enable httpd"
+        }
+    }
+        stage('deploy html index file'){
+        steps{
+            sh "echo 'this is deployed using jenkins pipeline' >> /var/www/html/index.html"
+        }
+    }  
+        stage('start httpd server'){
+        steps{
+            sh "systemctl start httpd"
+        }
+    } 
+        stage('status httpd server'){
+        steps{
+            sh "systemctl status httpd"
+        }
+    }   
+
+    }
+}
