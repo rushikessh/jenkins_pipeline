@@ -1,0 +1,28 @@
+pipeline{
+    agent{
+        node{
+            label "slave"
+            customWorkspace "/root"
+        }
+    }
+    stages{
+        stage('clean workspace'){
+            steps{
+                cleanWs()
+            }
+        }
+        stage('create a directory'){
+            steps{
+                sh "mkdir tomcat"
+            }
+        }
+        stage('create a touch file'){
+            steps{
+                dir('/root/tomcat'){
+                    sh 'touch index.html'
+                }
+            }
+        }
+        
+    }
+}
