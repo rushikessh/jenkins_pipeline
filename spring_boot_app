@@ -1,0 +1,45 @@
+pipeline{
+    agent{
+        node{
+            label "built-in"
+            customWorkspace "/root/project1/project2/"
+        }
+    }
+    stages{
+        stage('cleanWorkspace'){
+            steps{
+                cleanWs()
+            }
+        }
+        
+        stage('git clone'){
+            steps{
+                sh "git clone https://github.com/rushikessh/spring-boot-ms.git"
+            }
+        }
+        stage('mvn build'){
+            steps{
+                dir ("/root/project1/project2/spring-boot-ms/java-maven-sonar-argocd-helm-k8s/spring-boot-app"){
+                    sh "mvn clean install"
+                }
+            }
+        }
+        stage('deployement'){
+            steps{
+                sh "cp -r /root/project1/project2/spring-boot-ms/java-maven-sonar-argocd-helm-k8s/spring-boot-app/target /root/project1/"                    sh "java -jar spring-boot-web.jar"
+                }
+            }
+        stage('start server'){
+            steps{
+                    dir("/root/project1/target/"){
+                    echo "starting java jar ..."
+                    echo " nohup java -jar spring-boot-web.jar & " > 'start-jar-in-background.sh' 
+                    export BUILD_ID=dontKillMe
+                    sh "start-jar-in-background.sh"
+                    echo " started java jar"
+                }
+            }
+        }
+        }
+    }
+
